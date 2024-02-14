@@ -1,7 +1,7 @@
 ---
-name: "[Feat] New Service"
+name: "[✨feat] 新建微服务"
 about: This is where you can start a new service, just fill the table↓
-title: "[services] Service: Desc"
+title: "[services] 服务名: 一句话简介"
 labels: "✨feat"
 assignees: ''
 
