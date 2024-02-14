@@ -16,6 +16,7 @@ import flask
 from flask import request
 
 import verify
+import send
 
 app = flask.Flask(__name__)
 
@@ -26,9 +27,10 @@ def newVerify():
     [内部] 进行一个新的验证
 
     [Request]
-    method: str = [email]
+    method: str (one of [email])
+    target: str (e.g. "test@openteens.org")
     session: str
-    callbackURI: str (建议使用绝对路径)
+    callbackURI: str (建议使用带https的绝对路径)
 
     [Response]
     {
@@ -36,16 +38,17 @@ def newVerify():
     }
     """
     method = request.args.get("method")
+    target = request.args.get("target")
     session = request.args.get("session")
     callbackURI = request.args.get("callbackURI")
 
     code = verify.genOutsideCode(session, callbackURI)
 
     if method == "email":
-        # [TODO]: Send Email
-        print("Send Email:", code)
-        pass
-
+        send.sendEmail(target, code)
+    else:
+        return {"code": -1}
+    
     return {"code": 0}
 
 
@@ -55,7 +58,7 @@ def verifyOutsideCode():
     [外部] 验证外部验证码
 
     [Request]
-    code: str
+    code: str (外部验证码)
 
     [Response]
     Redirect
@@ -83,7 +86,7 @@ def verifyInsideCode():
     [内部] 验证内部验证码
 
     [Request]
-    code: str
+    code: str (内部验证码)
 
     [Response]
     {
