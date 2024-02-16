@@ -10,7 +10,30 @@ OpenTeens社区后端项目是由OpenTeensCore团队开发的，旨在为前端�
 
 ## 如何下载项目 📦
 
-(待完善)
+1. 打开终端或命令提示符。
+2. 运行以下命令来克隆项目仓库：
+
+```bash
+git clone https://github.com/OpenTeens/backend.git
+```
+
+3. 进入项目目录：
+
+```bash
+cd backend
+```
+
+## 启动项目 🚀
+
+在项目根目录下，执行以下命令来启动项目：
+
+```bash
+pip install -U -r requirement.txt
+uvicorn app:application --reload --host localhost --port 80
+```
+
+这将启动服务器，默认监听在`localhost`。您可以通过访问`http://localhost`来测试是否成功运行。
+=======
 
 ## 进行开发 👨‍💻👩‍💻
 

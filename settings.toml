@@ -1,0 +1,4 @@
+[default]
+logger="OpenTeens"
+debug=true
+test="hello world!"

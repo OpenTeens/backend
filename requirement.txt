@@ -1,0 +1,3 @@
+dynaconf
+fastapi[all]
+pony
