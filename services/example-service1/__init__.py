@@ -1,3 +1,8 @@
+'''
+Date: 2024-02-16 13:29:36
+LastEditors: 宁静致远 468835121@qq.com
+LastEditTime: 2024-02-16 22:44:57
+'''
 # -*- coding: utf-8 -*-
 # Date: 2024-02-16 13:29:36
 # LastEditors: 宁静致远 468835121@qq.com
@@ -29,10 +34,14 @@ def entrypoint(settings:Dynaconf):
     "Init":lambda:init(settings),
 }
 
+g_settings=None
+
 def init(a:Dynaconf):
     print('原神~启动！')
     print(f'试着读配置{a.get("test")}')
+    global g_settings
+    g_settings=a
 
 @router.get("/")
 def index():
-    return {"success":True}
+    return {"success":True,"settings":g_settings}

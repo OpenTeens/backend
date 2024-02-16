@@ -31,7 +31,8 @@ cd backend
 在项目根目录下，执行以下命令来启动项目：
 
 ```bash
-# 目前没有任何启动命令，将会在微服务逐渐完全后更新
+pip install -U -r requirement.txt
+uvicorn app:application --reload --host localhost --port 80
 ```
 
 这将启动服务器，默认监听在`localhost`。您可以通过访问`http://localhost`来测试是否成功运行。
