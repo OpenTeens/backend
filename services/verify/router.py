@@ -20,24 +20,28 @@ import verify
 import send
 
 
-router = None
+inter_router = None
+public_router = None
 
 
-def init(r: fastapi.APIRouter):
-    global router
+def init(ri: fastapi.APIRouter, rp: fastapi.APIRouter):
+    global inter_router
+    global public_router
+    inter_router = ri
+    public_router = rp
 
-    r.add_route("/newVerify", newVerify, methods=["GET"])
-    r.add_route("/verifyOutsideCode", verifyOutsideCode, methods=["GET"])
-    r.add_route("/verifyInsideCode", verifyInsideCode, methods=["GET"])
+    inter_router.add_route("/newVerify", newVerify, methods=["GET"])
+    inter_router.add_route("/verifyOutsideCode", verifyOutsideCode, methods=["GET"])
+    inter_router.add_route("/verifyInsideCode", verifyInsideCode, methods=["GET"])
 
-    router = r
+    public_router.add_route("/verify", verifyOutsideCode, methods=["GET"])
 
 
 def _getVerifyUri(code: str):
     """
     [Tool] 从验证码生成验证链接
     """
-    return f"https://openteens.org/verify?code={code}"
+    return f"https://openteens.org/verify/verify?code={code}"
 
 def newVerify():
     """

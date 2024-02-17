@@ -7,7 +7,7 @@ from dynaconf import Dynaconf
 
 from . import router
 
-router.init(APIRouter(prefix="/verify"))
+router.init(APIRouter(prefix="/verify"), APIRouter(prefix="/verify"))
 
 
 def entrypoint(settings: Dynaconf):
@@ -15,7 +15,8 @@ def entrypoint(settings: Dynaconf):
         "Author": "Bernie H.",
         "Version": "1.0.0",
         "Describe": "验证微服务，主要用于验证用户的邮箱等。",
-        "Router": router.router,
+        "InterRouter": router.inter_router,
+        "ExposeRouter": router.public_router,
         "Init": lambda: init(settings),
     }
 
