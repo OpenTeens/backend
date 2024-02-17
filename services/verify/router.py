@@ -30,7 +30,7 @@ def init(ri: fastapi.APIRouter, rp: fastapi.APIRouter):
     inter_router = ri
     public_router = rp
 
-    inter_router.add_route("/newVerify", newVerify, methods=["GET"])
+    inter_router.add_route("/newVerifyCode", newVerifyCode, methods=["GET"])
     inter_router.add_route("/verifyOutsideCode", verifyOutsideCode, methods=["GET"])
     inter_router.add_route("/verifyInsideCode", verifyInsideCode, methods=["GET"])
 
@@ -78,7 +78,7 @@ def newVerify():
 
 def newVerifyCode():
     """
-    [内部] 进行一个新的验证（返回验证码）
+    [内部] 进行一个新的验证（返回验证链接）
 
     Request: 
         session: str
