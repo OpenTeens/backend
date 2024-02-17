@@ -21,7 +21,7 @@ application = fastapi.FastAPI(
 services_path='services'
 if not os.path.exists(services_path):
     logger.critical(f"{os.path.join(os.getcwd(),services_path)} 不存在")
-    raise
+    raise OSError(f"{os.path.join(os.getcwd(),services_path)} 不存在")
 
 services = os.listdir(services_path)
 for service in services:
