@@ -1,4 +1,4 @@
-def sendEmail(target, code):
+def sendEmail(target, uri):
     """
     发送验证邮件
     """
@@ -128,13 +128,13 @@ def sendEmail(target, code):
 
                     您正在进行邮箱验证，请点击以下链接完成验证：
                     <div id="verificationCode">
-                        <a href="https://api.openteens.org/userVerify?code={}"><button class="button">验证邮箱</button></a>
+                        <a href="{}"><button class="button">验证邮箱</button></a>
                     </div>
                     若不是您在操作，请忽略此邮件。
                     <div id="content_bottom">
                         <small>
                         如果您无法点击以上链接，请将此链接复制到浏览器地址栏中访问。
-                        <a href="https://api.openteens.org/userVerify?code={}">https://api.openteens.org/userVerify?code={}</a>
+                        <a href="{}">{}</a>
                         </small>
                     </div>
                 </div>
@@ -156,6 +156,6 @@ def sendEmail(target, code):
     title = "OpenTeens 邮箱验证"
     from_ = "OpenTeens <noreply@openteens.org>"
     to = target
-    content = template.format(code, code, code)
+    content = template.format(uri, uri, uri)
     
 
