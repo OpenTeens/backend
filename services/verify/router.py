@@ -14,7 +14,7 @@
 """
 
 import fastapi
-from fastapi import Request, Response, redirect
+from fastapi import Request, Response
 
 import verify
 import send
@@ -23,6 +23,8 @@ import send
 inter_router = None
 public_router = None
 
+def redirect(url):
+    print("You redirected to:",url)
 
 def init(ri: fastapi.APIRouter, rp: fastapi.APIRouter):
     global inter_router
