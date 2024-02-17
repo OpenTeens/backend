@@ -27,15 +27,15 @@ services = os.listdir(services_path)
 for service in services:
     try:
         entrypoint = importlib.import_module(f"{services_path}.{service}").entrypoint
-        matedata = entrypoint(settings)
+        metadata = entrypoint(settings)
         logger.warn("#"*50+f"""
 加载{service}
-\t作者{matedata['Author']}
-\t版本{matedata['Version']}
-\t描述{matedata['Describe']}
+\t作者{metadata['Author']}
+\t版本{metadata['Version']}
+\t描述{metadata['Describe']}
 """+"#"*50)
-        application.include_router(matedata['Router'])
-        matedata['Init']()
+        application.include_router(metadata['Router'])
+        metadata['Init']()
     except Exception as e:
         logger.warn(f"加载{service}出错")
         logger.warn(e)
