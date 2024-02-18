@@ -157,4 +157,4 @@ def verifyInsideCode():
 
 if __name__ == "__main__":
     init(fastapi.APIRouter())
-    router.run("localhost", 5003)
+    # router.run("localhost", 5003)
