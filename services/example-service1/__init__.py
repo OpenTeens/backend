@@ -1,52 +1,22 @@
 """
-Date: 2024-02-16 13:29:36
-LastEditors: 宁静致远 468835121@qq.com
-LastEditTime: 2024-02-16 22:44:57
+每一个模块必须的文件:
+  - __init__.py
+  - router.py       
+  - api.py
+
+
+__init__.py必须提供的东西:
+  - entrypoint(settings: dict) -> dict
+  - init_router(settings: dict) -> fastapi.APIRouter
 """
+from . import router
+from . import api
 
-# -*- coding: utf-8 -*-
-# Date: 2024-02-16 13:29:36
-# LastEditors: 宁静致远 468835121@qq.com
-# LastEditTime: 2024-02-16 22:15:40
-
-from fastapi import APIRouter
-from dynaconf import Dynaconf
-
-router = APIRouter(prefix="/njzy")
-
-
-def entrypoint(settings: Dynaconf):
-    """
-        description: 这个是入口点，会传入一个settings
-        return {
-        "Author":作者,
-        "Version":版本号,
-        "Describe":描述,
-        "Router":路由对象在这里,
-        "Init":载入路由之后的初始（可以放其他线程启动啥的，别阻塞）,
-    }
-    """
+def entrypoint(settings: dict):
     return {
-        "Author": "宁静致远",
-        "Version": "1.0.0",
-        "Describe": """
-实例微服务，主要测试能不能用
-""",
-        "Router": router,
-        "Init": lambda: init(settings),
+        "Author": "Example <xxx@example.com>",
+        "Version": "0.0.1",
+        "Description": "Example Service 1",
+        "PublicRouter": router.router,
+        "API": api,
     }
-
-
-g_settings = None
-
-
-def init(a: Dynaconf):
-    print("原神~启动！")
-    print(f'试着读配置{a.get("test")}')
-    global g_settings
-    g_settings = a
-
-
-@router.get("/")
-def index():
-    return {"success": True, "settings": g_settings}
