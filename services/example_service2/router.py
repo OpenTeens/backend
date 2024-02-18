@@ -1,3 +1,13 @@
+'''
+Date: 2024-02-18 15:41:17
+LastEditors: 宁静致远 468835121@qq.com
+LastEditTime: 2024-02-18 16:10:16
+'''
+'''
+Date: 2024-02-18 15:41:17
+LastEditors: 宁静致远 468835121@qq.com
+LastEditTime: 2024-02-18 15:44:36
+'''
 """
 [该文件为必须文件]
 router.py用于定义对外公开的api路由, 并提供一个router对象供__init__.py调用。
@@ -23,10 +33,10 @@ import fastapi
 from . import api
 
 
-router = fastapi.APIRouter(prefix="/example")
+router = fastapi.APIRouter(prefix="/example2")
 
 @router.get("/add")
-def add():
+def add(a:int,b:int):
     """
     对func.add进行简单封装。
 
@@ -39,51 +49,13 @@ def add():
     :return: int
     """
     # Get parameter
-    request = fastapi.Request()
-    a = request.args.get("a")
-    b = request.args.get("b")
+    # request = fastapi.Request()
+    # a = request.args.get("a")
+    # b = request.args.get("b")
 
-    # Type Check
-    if not isinstance(a, int) or not isinstance(b, int):
-        return {
-            "code": 1,
-            "msg": "Parameter Error",
-            "data": None
-        }
-    
-    # Type Convert
-    a = int(a)
-    b = int(b)
 
     # Process
-    ret = api.add(a, b)
-
-    # Return
-    return {
-        "code": 0,
-        "msg": "Success",
-        "data": ret
-    }
-
-@router.get("/wrong")
-def wrong_example():
-    """
-    一个 **错误** 的例子。
-
-    这个函数调用了两个业务逻辑函数, 这是不允许的。
-
-    :return: int
-    """
-    # Get parameter
-    request = fastapi.Request()
-    a = request.args.get("a")
-    b = request.args.get("b")
-    c = request.args.get("c")
-
-    # [Warning!] Call two business logic function
-    ret = api.add(a, b) + api.add(b, c)
-    # or
-    ret = api.add(api.add(a, b), c)
+    ret = a + b
 
     # Return
     return {
