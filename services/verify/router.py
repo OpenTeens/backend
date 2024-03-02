@@ -15,6 +15,7 @@
 
 import fastapi
 from fastapi import Request, Response
+from starlette.responses import RedirectResponse
 
 import verify
 import send
@@ -23,8 +24,6 @@ import send
 inter_router = None
 public_router = None
 
-def redirect(url):
-    print("You redirected to:",url)
 
 def init(ri: fastapi.APIRouter, rp: fastapi.APIRouter):
     global inter_router
@@ -127,7 +126,7 @@ def verifyOutsideCode():
     else:
         redirectURI = "ERROR: Invalid Verification Link"
 
-    return redirect(redirectURI)
+    return RedirectResponse(redirectURI)
 
 
 def verifyInsideCode():
@@ -158,4 +157,4 @@ def verifyInsideCode():
 
 if __name__ == "__main__":
     init(fastapi.APIRouter())
-    router.run("localhost", 5003)
+    # router.run("localhost", 5003)
