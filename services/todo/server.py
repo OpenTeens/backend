@@ -46,6 +46,9 @@ def updateTask(listID: str):
 
 @app.route("/<listID>/getTasks", methods=["GET"])
 def getTasks(listID: str):
+    if listID not in todo_db.db.tables:
+        createList(listID)
+    
     tasks = todo_db.getTasks(listID)
     return {"code": 0, "msg": "success", "tasks": list(tasks)}
 
