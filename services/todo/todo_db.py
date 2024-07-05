@@ -6,6 +6,8 @@ db = DataBase("todo.db")
 
 
 def addTable(tbname):
+    if tbname in db.tables:
+        return False
     tb = db.createTable(tbname)
     tb.struct(
         {
@@ -20,6 +22,7 @@ def addTable(tbname):
         primaryKey="id",
         autoIncrement=True,
     )
+    return True
 
 
 def addTask(tbname, title, content, ddl, manager, reviewer):

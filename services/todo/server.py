@@ -6,8 +6,10 @@ app = flask.Flask(__name__)
 
 @app.route("/create/<listID>", methods=["PUT"])
 def createList(listID):
-    todo_db.addTable(listID)
-    return {"code": 0, "status": "success", "listID": listID}
+    if todo_db.addTable(listID):
+        return {"code": 0, "status": "success", "listID": listID}
+    else:
+        return {"code": 1, "status": "failed", "listID": listID}
 
 @app.route("/<listID>/addTask", methods=["POST"])
 def addTask(listID: str):
