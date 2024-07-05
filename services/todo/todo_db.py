@@ -41,15 +41,14 @@ def addTask(tbname, title, content, ddl, manager, reviewer):
 
 def findTask(tbname, title, content, ddl, manager, reviewer):
     tb = db[tbname]
-    res = list(
+    res = tb.select(
         (tb["title"] == title)
         & (tb["content"] == content)
         & (tb["ddl"] == ddl)
         & (tb["manager"] == manager)
         & (tb["reviewer"] == reviewer)
-    )[0]
-
-    return res
+    )
+    return res[0]
 
 
 def getTasks(tbname):
