@@ -3,7 +3,12 @@
         {
             "path": "/",
             "methods": ["GET"],
-            "handler": "main.index"
+            "handler": "index"
+        },
+        {
+            "path": "/hello/<name>/<int:age>",
+            "methods": ["GET"],
+            "handler": "hello"
         }
     ]
 }

@@ -3,16 +3,17 @@ import os
 import json
 
 from service import Service
-from flask import Blueprint
 
 class APIGateway:
-    def __init__(self, host="0.0.0.0", port=5000):
+    def __init__(self, host="0.0.0.0", port=5000, **kwargs):
+        self._get_all_services()
+
         self.app = flask.Flask("API Gateway")
-        self.services = self.get_all_services()
         self.host = host
         self.port = port
+        self.kwargs = kwargs
 
-    def get_all_services(self) -> dict:
+    def _get_all_services(self):
         """
         Find all services in the services directory and return their metadata.
         """
@@ -20,35 +21,51 @@ class APIGateway:
         services = {}
 
         for s in slist:
-            if os.path.isdir(f"services/{s}"):
-                if os.path.exists(f"services/{s}/meta.json"):
-                    with open(f"services/{s}/meta.json", "r") as f:
-                        meta = json.load(f)
-                    with open(f"services/{s}/apis.json", "r") as f:
-                        apis = json.load(f)
+            meta = json.load(open(f"services/{s}/meta.json"))
+            apis = json.load(open(f"services/{s}/apis.json"))
 
-                    sname = meta["name"]
-                    services[sname] = Service(meta, apis)
+            sname = meta["name"]
+            services[sname] = Service(meta, apis)
 
-        return services
+        self.services = services
     
     def run(self):
-        # Register the API blueprints
+        """
+        Create specified router from services' prefixes. And run the flask app
+        """
         for _, s in self.services.items():
-            if not s.disabled:
-                for s in self.services.items():
-                    if not s.disabled:
-                        blueprint = s.create_blueprint(self.gen_gateway)
-                        self.app.register_blueprint(blueprint)
+            @self.app.route(f"/{s.prefix}/<path:path>", methods=["GET", "POST", "PUT", "DELETE"])
+            def gateway(path):
+                return self.process(s, path, flask.request)
 
-        self.app.run(self.host, self.port)
+        self.app.run(self.host, self.port, **self.kwargs)
 
-    def gen_gateway(self, service: Service):
-        def gateway(path, request):
-            return f"Hello from {service.name} at {path}, {request.method}!"
+    def process(self, service, path, request: flask.Request):
+        """
+        Process a incoming request, and return the response
+        """
+        m = service.routes.match(path, request.method)
+        if not m:
+            print("Not matched:", path)
+            flask.abort(404)
         
-        return gateway
+        api_id, params = m[0]   # the first matched
+        api = service.apis["routes"][api_id]
+
+        if service.forwardType == "pymodule":
+            return self.process_pymodule(service.module, api, params)
+
+    def process_pymodule(self, module, api, params: dict):
+        """
+        Process a incoming request using specified module, which containes the handler.
+        """
+        handler_name = api["handler"]
+        handler_func = getattr(module, handler_name)
+
+        response = handler_func(**params)
+        return response
 
 if __name__ == "__main__":
-    apigate = APIGateway("0.0.0.0", 5000)
+    apigate = APIGateway("0.0.0.0", 5000, debug=True)
     apigate.run()
+

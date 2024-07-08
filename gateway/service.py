@@ -1,6 +1,4 @@
-from flask import Blueprint, request
-
-import os
+import importlib.util
 
 from route import RouteList
 
@@ -13,38 +11,26 @@ class Service:
         self.version = meta["version"]
         self.port = meta["port"]
         self.prefix = meta["prefix"]
-        self.run = meta["run"]
+        self.forward = meta["forward"]
+        self.forwardType = meta["forward"]["type"]
         self.disabled = meta.get("disabled", False)
 
+        self.apis = apis
         self.routes = RouteList(apis["routes"])
 
-        if not self.disabled:
-            self.activate()
-
-    def activate(self):
-        match self.run["use"]:
-            case "shell":
-                os.system(f"{self.run['command']} &")
-
-    def create_bp_normal(self, gateway: callable):
-        """
-        Create a Flask blueprint for API routes with the given prefix.
-        """
-        prefix = self.prefix
-        blueprint = Blueprint(prefix, __name__, url_prefix=f"/{prefix}")
-
-        # decorate the handler
-        @blueprint.route("/<path:path>", methods=["GET", "POST", "PUT", "DELETE"])
-        def route_handler(path):
-            return gateway(path, request)
+        if self.disabled:
+            return
         
-        return blueprint
-    
-    def create_blueprint(self, gen_gateway: callable):
-        creator = {
-            "shell": self.create_bp_normal,
-        }.get(self.run["use"], self.create_bp_normal)
+        # forward request to a pymodule: import it
+        if self.forwardType == "pymodule":
+            self.module = self.import_pymodule()
 
-        gateway = gen_gateway(self)
+    def import_pymodule(self):
+        module_name = f"service_{self.name}"
+        module_path = self.forward["entry"]
 
-        return creator(gateway)
+        spec = importlib.util.spec_from_file_location(module_name, module_path)
+        module = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(module)
+
+        return module

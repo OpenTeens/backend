@@ -35,7 +35,7 @@ class PathVar:
             raise NotImplementedError("Path type not implemented")
 
 
-class Route:
+class RawRoute:
     def __init__(self, path):
         path = path.split("?")[0]  # remove query string
         path = path.lstrip("/")  # remove leading '/'
@@ -111,15 +111,21 @@ class Route:
         return m2
 
 
+class Route:
+    def __init__(self, path: str, methods: list):
+        self.path = RawRoute(path).merge()
+        self.methods = methods
+
+
 class RouteList:
     def __init__(self, routes: list):
-        self.routes = routes
+        self.routes = []
 
         for i in range(len(routes)):
-            r = routes[i]
-            self.routes[i] = Route(r).merge()
+            r = routes[i]["path"]
+            self.routes.append(Route(r, routes[i]["methods"]))
 
-    def match(self, path: str):
+    def match(self, path: str, method: str):
         path = urldecode(path)
         path = path.split("?")[0]
         path = path.lstrip("/")
@@ -129,14 +135,19 @@ class RouteList:
 
         for i in range(len(self.routes)):
             route = self.routes[i]
+            rpath = route.path
+
+            if method not in route.methods:
+                continue
+
             path = path_backup
             params = {}
 
-            for p in route:
+            for p in rpath:
                 # 'const string' part: must be fully matched
                 if type(p) is str:
-                    if path.startswith(route[0]):
-                        path = path[len(route[0]) :]
+                    if path.startswith(rpath[0]):
+                        path = path[len(rpath[0]) :]
                 # path variable part: match and extract
                 elif type(p) is PathVar:
                     # TODO: doesn't support path type yet
@@ -159,15 +170,18 @@ class RouteList:
                 if path.strip() == "":
                     matched.append([i, params])
                     return matched  # Due to the logic of flask routing (return the first matched route), we can simply return here.
-                
+
         # return all matched routes
         return matched
 
 
 if __name__ == "__main__":
     rl = RouteList(
-        ["/", "/hello", "/hello/world/<name>", "/hello/<to>/<name>", "bye/<name>"]
+        [
+            {"path": "/", "methods": ["GET"], "handler": "index"},
+            {"path": "/hello/<name>/<int:age>", "methods": ["GET"], "handler": "hello"},
+        ]
     )
 
-    m = rl.match("/hello/world/John")
+    m = rl.match("/hello/John/8", "GET")
     print(m)
