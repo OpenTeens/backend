@@ -1,0 +1,12 @@
+{
+    "name": "example-service1",
+    "description": "This is an example service",
+    "version": "1.0.0",
+    "autorun": true,
+    "port": 5000,
+    "prefix": "example1",
+    "run": {
+        "use": "shell",
+        "command": "python3 services/example-service1/main.py"
+    }
+}
