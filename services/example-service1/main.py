@@ -1,10 +1,8 @@
-import flask
-
-app = flask.Flask("example-service1")
-
-@app.route('/')
 def index():
     return 'Hello, world!'
 
+def hello(name, age):
+    return f'Hello, {name} ({age})'
+
 if __name__ == '__main__':
-    app.run("localhost", 5001)
+    print(hello("hg", 16))
