@@ -2,11 +2,10 @@
     "name": "example1",
     "description": "This is an example service",
     "version": "1.0.0",
-    "autorun": true,
+    "disabled": false,
     "port": 5000,
     "prefix": "example1",
-    "forward": {
-        "type": "pymodule",
-        "entry": "services/example-service1/main.py"
+    "process": {
+        "type": "pymodule"
     }
 }
