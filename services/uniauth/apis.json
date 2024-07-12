@@ -1,0 +1,24 @@
+{
+    "routes": [
+        {
+            "path": "/register",
+            "methods": ["POST"],
+            "handler": "register"
+        },
+        {
+            "path": "/login",
+            "methods": ["POST"],
+            "handler": "login_pwd"
+        },
+        {
+            "path": "/verifyToken",
+            "methods": ["GET"],
+            "handler": "login_token"
+        },
+        {
+            "path": "/logout",
+            "methods": ["GET"],
+            "handler": "logout"
+        }
+    ]
+}

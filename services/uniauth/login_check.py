@@ -1,5 +1,5 @@
-import login_db
-import token_db
+from . import login_db
+from . import token_db
 
 def _uname_check(username: str):
     if len(username) < 6 or len(username) > 20:
@@ -21,8 +21,8 @@ def register(username: str, password: str):
 
     if check:
         return {
-            "code": 0
-            "token": token_db.create_token(username, {"username": username})    # there won't be 5 token when registering
+            "code": 0,
+            "token": token_db.create_token(username)    # there won't be 5 token when registering
         }
     else:
         return {
@@ -44,7 +44,7 @@ def login(username: str, password: str):
             "msg": "Invalid username or password"
         }
 
-    token = token_db.create_token(username, {"username": username})
+    token = token_db.create_token(username)
     if token is None:
         return {
             "code": 3,
@@ -56,8 +56,8 @@ def login(username: str, password: str):
         "token": token
     }
 
-def tlogin(username: str, token: str):
-    if not token_db.check_token(username, {"username": username}, token):
+def tlogin(token: str):
+    if not token_db.check_token(token):
         return {
             "code": 1,
             "msg": "Invalid token"
@@ -67,8 +67,8 @@ def tlogin(username: str, token: str):
         "code": 0
     }
 
-def logout(username: str, token: str):
-    if not token_db.check_token(username, {"username": username}, token):
+def logout(token: str):
+    if not token_db.check_token(token):
         return {
             "code": 1,
             "msg": "Invalid token"
