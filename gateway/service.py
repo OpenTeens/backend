@@ -1,6 +1,10 @@
-import importlib.util
+import importlib
+import sys
+import os
 
 from route import RouteList
+
+sys.path.append(f"{os.getcwd()}/services")
 
 
 class Service:
@@ -11,8 +15,8 @@ class Service:
         self.version = meta["version"]
         self.port = meta["port"]
         self.prefix = meta["prefix"]
-        self.forward = meta["forward"]
-        self.forwardType = meta["forward"]["type"]
+        self.process = meta["process"]
+        self.processType = meta["process"]["type"]
         self.disabled = meta.get("disabled", False)
 
         self.apis = apis
@@ -20,17 +24,14 @@ class Service:
 
         if self.disabled:
             return
-        
+
         # forward request to a pymodule: import it
-        if self.forwardType == "pymodule":
+        if self.processType == "pymodule":
             self.module = self.import_pymodule()
 
     def import_pymodule(self):
-        module_name = f"service_{self.name}"
-        module_path = self.forward["entry"]
+        module_name = self.name
 
-        spec = importlib.util.spec_from_file_location(module_name, module_path)
-        module = importlib.util.module_from_spec(spec)
-        spec.loader.exec_module(module)
+        module = importlib.import_module(module_name)
 
         return module

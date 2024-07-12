@@ -33,14 +33,18 @@ class APIGateway:
         """
         Create specified router from services' prefixes. And run the flask app
         """
-        for _, s in self.services.items():
-            @self.app.route(f"/{s.prefix}/<path:path>", methods=["GET", "POST", "PUT", "DELETE"])
+        def make_gateway(s):
             def gateway(path):
+                print(self.app.url_map)
                 return self.process(s, path, flask.request)
+            return gateway
+
+        for _, s in self.services.items():
+            self.app.route(f"/{s.prefix}/<path:path>", methods=["GET", "POST", "PUT", "DELETE"], endpoint=f"gw_{s.prefix}")(make_gateway(s))
 
         self.app.run(self.host, self.port, **self.kwargs)
 
-    def process(self, service, path, request: flask.Request):
+    def process(self, service: Service, path, request: flask.Request):
         """
         Process a incoming request, and return the response
         """
@@ -52,7 +56,7 @@ class APIGateway:
         api_id, params = m[0]   # the first matched
         api = service.apis["routes"][api_id]
 
-        if service.forwardType == "pymodule":
+        if service.processType == "pymodule":
             return self.process_pymodule(service.module, api, params)
 
     def process_pymodule(self, module, api, params: dict):

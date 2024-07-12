@@ -150,7 +150,6 @@ class RouteList:
                         path = path[len(rpath[0]) :]
                 # path variable part: match and extract
                 elif type(p) is PathVar:
-                    # TODO: doesn't support path type yet
                     if p.type != "path":
                         path = path.lstrip("/")
                         part = path.split("/")[0]
@@ -162,6 +161,7 @@ class RouteList:
                             # not matched
                             break
                     else:
+                        # TODO: doesn't support path type yet
                         pass
                 # you should never reach here
                 else:
