@@ -1,0 +1,10 @@
+pipes:
+  - name: pipe_auth
+    rules:
+      - force: true
+        match: 
+          path: "*"
+          methods: "*"
+    processor:
+      service: uniauth
+      handler: pipe_auth

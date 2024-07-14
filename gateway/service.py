@@ -1,6 +1,7 @@
 import importlib
 import sys
 import os
+import json
 
 from route import RouteList
 
@@ -28,6 +29,13 @@ class Service:
         # forward request to a pymodule: import it
         if self.processType == "pymodule":
             self.module = self.import_pymodule()
+
+    @classmethod
+    def from_sname(cls, sname: str):
+        meta = json.load(open(f"services/{sname}/meta.json"))
+        apis = json.load(open(f"services/{sname}/apis.json"))
+
+        return cls(meta, apis)
 
     def import_pymodule(self):
         module_name = self.name

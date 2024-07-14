@@ -28,3 +28,23 @@ def logout():
     token = request.form.get("token")
 
     return login_check.logout(token)
+
+def pipe_auth(prev_data: dict):
+    token = request.cookies.get("ot_login_token", None)
+    if token is not None:
+        tlogin = login_check.tlogin(token)
+        if tlogin["code"] == 0:
+            return {
+                "reject": False,
+                "result": {
+                    "authorized": True,
+                    "username": tlogin["username"]
+                }
+            }
+    else:
+        return {
+            "reject": False,
+            "result": {
+                "authorized": False
+            }
+        }

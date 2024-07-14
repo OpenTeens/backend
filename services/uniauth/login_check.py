@@ -64,7 +64,8 @@ def tlogin(token: str):
         }
 
     return {
-        "code": 0
+        "code": 0,
+        "username": token_db.get_username(token)
     }
 
 def logout(token: str):
