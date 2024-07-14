@@ -1,7 +1,7 @@
 # gateway/pipe
 
 ## config
-config file: `gateway/pipe_config.yaml`
+config file: `gateway/pipe.yaml`
 ```yaml
 pipes:
   - name: <pipe name>   # the first one to execute

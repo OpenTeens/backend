@@ -76,6 +76,9 @@ def del_token(token: str):
         return True
     return False
 
+def get_username(token: str):
+    return list(tb["token"] == token)[0]["username"]
+
 
 if __name__ == "__main__":
     t = create_token("bernie")

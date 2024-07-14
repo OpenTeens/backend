@@ -6,6 +6,11 @@
             "handler": "index"
         },
         {
+            "path": "/loginStatus",
+            "methods": ["GET"],
+            "handler": "loginStatus"
+        },
+        {
             "path": "/hello/<name>/<int:age>",
             "methods": ["GET"],
             "handler": "hello"

@@ -20,6 +20,7 @@ class PipeItem:
         """
         for r in self.rules:
             if r["methods"] == "*" or method in r["methods"]:
+                print(r["path"], path)
                 if re.match(r["path"], path):
                     return True
 
@@ -46,14 +47,14 @@ class Pipe:
         for i in config["pipes"]:
             self.items.append(PipeItem(i))
 
-    def process(self, path: str, method: str):
+    def process(self, fullPath: str, method: str):
         """
         Process a incoming request, and return the response
         """
         prev_data = {}
 
         for item in self.items:
-            if item.match(path, method):
+            if item.match(fullPath, method):
                 result = item.process(prev_data)
                 if result is False:
                     return False
