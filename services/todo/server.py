@@ -10,7 +10,11 @@ CORS(app, origins="*")
 
 
 def _hash(s):
-    return sha256(s.encode("utf-8")).hexdigest() + sha512(s.encode("utf-8")).hexdigest()
+    return (
+        "s"
+        + sha256(s.encode("utf-8")).hexdigest()
+        + sha512(s.encode("utf-8")).hexdigest()
+    )
 
 
 @app.route("/create/<listID>", methods=["GET"])
