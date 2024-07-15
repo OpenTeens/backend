@@ -74,15 +74,6 @@ def getTasks(listID: str):
     return {"code": 0, "msg": "success", "tasks": list(tasks)}
 
 
-@app.route("/<listID>/getTask", methods=["GET"])
-def getTask(listID: str):
-    listID = _hash(listID)
-
-    id = flask.request.args.get("id")
-    task = todo_db.getTask(listID, id)
-    return {"code": 0, "msg": "success", "task": list(task)}
-
-
 if __name__ == "__main__":
     app.run(
         host="0.0.0.0",
