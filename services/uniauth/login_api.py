@@ -41,10 +41,9 @@ def pipe_auth(prev_data: dict):
                     "username": tlogin["username"]
                 }
             }
-    else:
-        return {
-            "reject": False,
-            "result": {
-                "authorized": False
-            }
+    return {
+        "reject": False,
+        "result": {
+            "authorized": False
         }
+    }
