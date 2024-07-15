@@ -1,6 +1,6 @@
 import re
 
-from service import Service
+from .service import Service
 
 class PipeItem:
     def __init__(self, config: dict):
