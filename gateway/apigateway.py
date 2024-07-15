@@ -3,9 +3,9 @@ import os
 import json
 import yaml
 
-from service import Service
-from pipe import Pipe
-from flask_cors import CORS
+from .service import Service
+from .pipe import Pipe
+from .flask_cors import CORS
 
 class APIGateway:
     def __init__(self, host="0.0.0.0", port=5000, **kwargs):
