@@ -1,0 +1,24 @@
+{
+    "routes": [
+        {
+            "path": "/create/<listID>",
+            "methods": ["GET"],
+            "handler": "createList"
+        },
+        {
+            "path": "/<listID>/addTask",
+            "methods": ["POST"],
+            "handler": "addTask"
+        },
+        {
+            "path": "/<listID>/updateTask",
+            "methods": ["POST"],
+            "handler": "updateTask"
+        },
+        {
+            "path": "/<listID>/getTasks",
+            "methods": ["GET"],
+            "handler": "getTasks"
+        }
+    ]
+}
