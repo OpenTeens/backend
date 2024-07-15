@@ -103,7 +103,7 @@ class APIGateway:
         handler_name = api["handler"]
         handler_func = getattr(module, handler_name)
 
-        data = {"prev_process": pipe_data}
+        data = pipe_data
         response = handler_func(data, **params)
         return response
 

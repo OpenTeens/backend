@@ -46,8 +46,20 @@ def addTask(prev_process, listID: str):
 def updateTask(prev_process, listID: str):
     listID = _hash(listID)
 
+    if prev_process["pipe_auth"]["authorized"] is False:
+        uname = "!anonymous!"
+    else:
+        uname = prev_process["pipe_auth"]["username"]
+
     data = flask.request.json
     id = data["id"]
+
+    # authorized
+    manager = todo_db.getTask(listID, data["id"])["manager"]
+    reviewer = todo_db.getTask(listID, data["id"])["reviewer"]
+    if manager != "" and uname not in [manager, reviewer]:
+        return {"code": 1, "msg": "unauthorized"}
+
     todo_db.updateTask(listID, id, **data["update"])
     return {"code": 0, "msg": "success"}
 
