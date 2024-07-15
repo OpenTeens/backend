@@ -5,7 +5,7 @@ import yaml
 
 from service import Service
 from pipe import Pipe
-
+from flask_cors import CORS
 
 class APIGateway:
     def __init__(self, host="0.0.0.0", port=5000, **kwargs):
@@ -13,6 +13,9 @@ class APIGateway:
         self.pipe = Pipe(yaml.load(open("gateway/pipe.yaml"), yaml.SafeLoader))
 
         self.app = flask.Flask("API Gateway")
+
+        CORS(self.app, origins=["https://openteens.org", "https://todo.openteens.org"])
+        
         self.host = host
         self.port = port
         self.kwargs = kwargs
