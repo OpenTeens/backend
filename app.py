@@ -1,3 +1,5 @@
+import flask
+
 from gateway.apigateway import APIGateway
 
 def run(self):
