@@ -1,12 +1,16 @@
 import flask
 import os
 import json
+import yaml
 
 from service import Service
+from pipe import Pipe
+
 
 class APIGateway:
     def __init__(self, host="0.0.0.0", port=5000, **kwargs):
         self._get_all_services()
+        self.pipe = Pipe(yaml.load(open("gateway/pipe.yaml"), yaml.SafeLoader))
 
         self.app = flask.Flask("API Gateway")
         self.host = host
@@ -28,44 +32,60 @@ class APIGateway:
             services[sname] = Service(meta, apis)
 
         self.services = services
-    
+
     def run(self):
         """
         Create specified router from services' prefixes. And run the flask app
         """
-        for _, s in self.services.items():
-            @self.app.route(f"/{s.prefix}/<path:path>", methods=["GET", "POST", "PUT", "DELETE"])
+
+        def make_gateway(s):
             def gateway(path):
                 return self.process(s, path, flask.request)
 
+            return gateway
+
+        for _, s in self.services.items():
+            self.app.route(
+                f"/{s.prefix}/<path:path>",
+                methods=["GET", "POST", "PUT", "DELETE"],
+                endpoint=f"gw_{s.prefix}",
+            )(make_gateway(s))
+
         self.app.run(self.host, self.port, **self.kwargs)
 
-    def process(self, service, path, request: flask.Request):
+    def process(self, service: Service, path, request: flask.Request):
         """
         Process a incoming request, and return the response
         """
+        # pipe
+        res = self.pipe.process(f"/{service.prefix}/{path}", request.method)
+        if res is False:
+            flask.abort(403)
+        pipe_data = res
+
         m = service.routes.match(path, request.method)
         if not m:
             print("Not matched:", path)
             flask.abort(404)
-        
-        api_id, params = m[0]   # the first matched
+
+        api_id, params = m[0]  # the first matched
         api = service.apis["routes"][api_id]
 
-        if service.forwardType == "pymodule":
-            return self.process_pymodule(service.module, api, params)
+        if service.processType == "pymodule":
+            return self.process_pymodule(service.module, api, params, pipe_data)
 
-    def process_pymodule(self, module, api, params: dict):
+    def process_pymodule(self, module, api, params: dict, pipe_data: dict):
         """
         Process a incoming request using specified module, which containes the handler.
         """
         handler_name = api["handler"]
         handler_func = getattr(module, handler_name)
 
-        response = handler_func(**params)
+        data = {"prev_process": pipe_data}
+        response = handler_func(data, **params)
         return response
+
 
 if __name__ == "__main__":
     apigate = APIGateway("0.0.0.0", 5000, debug=True)
     apigate.run()
-

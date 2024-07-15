@@ -1,0 +1,11 @@
+{
+    "name": "uniauth",
+    "description": "The unified authorization gateway for all services (in this backend repo)",
+    "version": "1.0.0",
+    "disabled": false,
+    "port": -1,
+    "prefix": "auth",
+    "process": {
+        "type": "pymodule"
+    }
+}
