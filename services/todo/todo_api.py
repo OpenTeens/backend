@@ -1,4 +1,4 @@
-import todo_db
+from . import todo_db
 
 import flask
 from hashlib import sha256, sha512
