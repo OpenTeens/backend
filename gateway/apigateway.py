@@ -87,5 +87,12 @@ class APIGateway:
 
 
 if __name__ == "__main__":
-    apigate = APIGateway("0.0.0.0", 5000, debug=True)
+    apigate = APIGateway(
+        "0.0.0.0",
+        5000,
+        ssl_context=(
+            "/home/bernie/cert/certificate.crt",
+            "/home/bernie/cert/private.key",
+        ),
+    )
     apigate.run()
