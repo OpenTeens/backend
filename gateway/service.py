@@ -3,7 +3,7 @@ import sys
 import os
 import json
 
-from route import RouteList
+from .route import RouteList
 
 sys.path.append(f"{os.getcwd()}/services")
 
