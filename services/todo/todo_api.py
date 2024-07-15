@@ -1,12 +1,7 @@
 import todo_db
 
 import flask
-from flask_cors import CORS
 from hashlib import sha256, sha512
-
-
-app = flask.Flask(__name__)
-CORS(app, origins="*")
 
 
 def _hash(s):
@@ -17,8 +12,7 @@ def _hash(s):
     )
 
 
-@app.route("/create/<listID>", methods=["GET"])
-def createList(listID):
+def createList(prev_process, listID):
     listID = _hash(listID)
 
     if todo_db.addTable(listID):
@@ -27,8 +21,7 @@ def createList(listID):
         return {"code": 1, "msg": "already exist", "listID": listID}
 
 
-@app.route("/<listID>/addTask", methods=["POST"])
-def addTask(listID: str):
+def addTask(prev_process, listID: str):
     listID = _hash(listID)
 
     data = flask.request.json
@@ -50,8 +43,7 @@ def addTask(listID: str):
     return {"code": 0, "msg": "success", "id": tid}
 
 
-@app.route("/<listID>/updateTask", methods=["POST"])
-def updateTask(listID: str):
+def updateTask(prev_process, listID: str):
     listID = _hash(listID)
 
     data = flask.request.json
@@ -60,8 +52,7 @@ def updateTask(listID: str):
     return {"code": 0, "msg": "success"}
 
 
-@app.route("/<listID>/getTasks", methods=["GET"])
-def getTasks(listID: str):
+def getTasks(prev_process, listID: str):
     listID = _hash(listID)
 
     if listID not in todo_db.db.tables:
@@ -72,15 +63,3 @@ def getTasks(listID: str):
 
     tasks = todo_db.getTasks(listID)
     return {"code": 0, "msg": "success", "tasks": list(tasks)}
-
-
-if __name__ == "__main__":
-    app.run(
-        host="0.0.0.0",
-        port=5001,
-        debug=True,
-        ssl_context=(
-            "/home/bernie/cert/certificate.crt",
-            "/home/bernie/cert/private.key",
-        ),
-    )
