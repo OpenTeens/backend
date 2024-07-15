@@ -3,8 +3,8 @@ from flask import request
 from . import login_check
 
 def login_pwd(data):
-    username = request.form.get("username")
-    pwd = request.form.get("password")
+    username = request.json.get("username")
+    pwd = request.json.get("password")
 
     return login_check.login(username, pwd)
 
@@ -19,13 +19,13 @@ def login_token(data):
     return login_check.tlogin(token)
 
 def register(data):
-    username = request.form.get("username")
-    pwd = request.form.get("password")
+    username = request.json.get("username")
+    pwd = request.json.get("password")
 
     return login_check.register(username, pwd)
 
 def logout(data):
-    token = request.form.get("token")
+    token = request.json.get("token")
 
     return login_check.logout(token)
 
