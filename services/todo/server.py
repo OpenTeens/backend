@@ -65,7 +65,10 @@ def getTasks(listID: str):
     listID = _hash(listID)
 
     if listID not in todo_db.db.tables:
-        createList(listID)
+        if todo_db.addTable(listID):
+            return {"code": 0, "msg": "success", "listID": listID}
+        else:
+            return {"code": 1, "msg": "already exist", "listID": listID}
 
     tasks = todo_db.getTasks(listID)
     return {"code": 0, "msg": "success", "tasks": list(tasks)}
