@@ -20,6 +20,8 @@ class APIGateway:
         self.port = port
         self.kwargs = kwargs
 
+        self.create_gateway_routes()
+
     def _get_all_services(self):
         """
         Find all services in the services directory and return their metadata.
@@ -36,14 +38,30 @@ class APIGateway:
 
         self.services = services
 
-    def run(self):
+    def create_gateway_routes(self):
         """
-        Create specified router from services' prefixes. And run the flask app
-        """
+        Creates the gateway routes for all registered services.
 
+        This method iterates over all registered services and creates the gateway routes
+        for each service. The gateway routes are created using the Flask `route` decorator
+        and the `make_gateway` function.
+
+        The `make_gateway` function is a closure that takes a service `s` as input and returns
+        a gateway function. The gateway function takes a `path` parameter and calls the `process`
+        method of the `self` object with the service `s`, the `path`, and the Flask `request` object.
+
+        The gateway routes are created for the HTTP methods GET, POST, PUT, and DELETE, and the
+        endpoint name is set to `gw_<service_prefix>`.
+
+        Example usage:
+        ```
+        gateway = ApiGateway()
+        gateway.create_gateway_routes()
+        ```
+        """
         def make_gateway(s):
             def gateway(path):
-                return self.process(s, path, flask.request)
+                return self.process(s, path)
 
             return gateway
 
@@ -54,19 +72,20 @@ class APIGateway:
                 endpoint=f"gw_{s.prefix}",
             )(make_gateway(s))
 
+    def run(self):
         self.app.run(self.host, self.port, **self.kwargs)
 
-    def process(self, service: Service, path, request: flask.Request):
+    def process(self, service: Service, path):
         """
         Process a incoming request, and return the response
         """
         # pipe
-        res = self.pipe.process(f"/{service.prefix}/{path}", request.method)
+        res = self.pipe.process(f"/{service.prefix}/{path}", flask.request.method)
         if res is False:
             flask.abort(403)
         pipe_data = res
 
-        m = service.routes.match(path, request.method)
+        m = service.routes.match(path, flask.request.method)
         if not m:
             print("Not matched:", path)
             flask.abort(404)
