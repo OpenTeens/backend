@@ -146,7 +146,8 @@ class RouteList:
             for p in rpath:
                 # 'const string' part: must be fully matched
                 if type(p) is str:
-                    p = "/" + p
+                    if path.startswith("/"):
+                        path = path[1:]
                     if path.startswith(p):
                         path = path[len(p):]
                 # path variable part: match and extract
