@@ -58,7 +58,7 @@ def getTasks(tbname):
 
 def getTask(tbname, id):
     tb = db[tbname]
-    return tb.select(where={"id": id})
+    return tb.select(tb["id"] == id)[0]
 
 
 def updateTask(tbname, id, **kwargs):
