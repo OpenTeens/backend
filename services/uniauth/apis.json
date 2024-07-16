@@ -3,12 +3,18 @@
         {
             "path": "/register",
             "methods": ["POST"],
-            "handler": "register"
+            "handler": "register",
+            "pipe_check": {
+                "authorized": [["==", false]]
+            }
         },
         {
             "path": "/login",
             "methods": ["POST"],
-            "handler": "login_pwd"
+            "handler": "login_pwd",
+            "pipe_check": {
+                "authorized": [["==", false]]
+            }
         },
         {
             "path": "/verifyToken",
@@ -18,7 +24,10 @@
         {
             "path": "/logout",
             "methods": ["GET"],
-            "handler": "logout"
+            "handler": "logout",
+            "pipe_check": {
+                "authorized": [["==", true]]
+            }
         }
     ]
 }
