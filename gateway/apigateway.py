@@ -79,20 +79,21 @@ class APIGateway:
         """
         Process a incoming request, and return the response
         """
-        # pipe
-        res = self.pipe.process(f"/{service.prefix}/{path}", flask.request.method)
-        if res is False:
-            flask.abort(403)
-        prev_process = res
-
+        # route
         m = service.routes.match(path, flask.request.method)
         if not m:
             print("Not matched:", path)
             flask.abort(404)
-
         api_id, params = m[0]  # the first matched
         api = service.apis["routes"][api_id]
 
+        # pipe
+        res = self.pipe.process(f"/{service.prefix}/{path}", flask.request.method, api.get("pipe_check", {}))
+        if res is False:
+            flask.abort(403)
+        prev_process = res
+
+        # process
         if service.processType == "pymodule":
             return self.process_pymodule(service.module, api, params, prev_process)
 
