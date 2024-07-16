@@ -83,7 +83,7 @@ class APIGateway:
         res = self.pipe.process(f"/{service.prefix}/{path}", flask.request.method)
         if res is False:
             flask.abort(403)
-        pipe_data = res
+        prev_process = res
 
         m = service.routes.match(path, flask.request.method)
         if not m:
@@ -94,17 +94,16 @@ class APIGateway:
         api = service.apis["routes"][api_id]
 
         if service.processType == "pymodule":
-            return self.process_pymodule(service.module, api, params, pipe_data)
+            return self.process_pymodule(service.module, api, params, prev_process)
 
-    def process_pymodule(self, module, api, params: dict, pipe_data: dict):
+    def process_pymodule(self, module, api, params: dict, prev_process: dict):
         """
         Process a incoming request using specified module, which containes the handler.
         """
         handler_name = api["handler"]
         handler_func = getattr(module, handler_name)
 
-        data = pipe_data
-        response = handler_func(data, **params)
+        response = handler_func(prev_process, **params)
         return response
 
 

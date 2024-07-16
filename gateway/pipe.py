@@ -51,15 +51,16 @@ class Pipe:
         """
         Process a incoming request, and return the response
         """
-        prev_data = {}
+        prev_process = {}
 
         for item in self.items:
             if item.match(fullPath, method):
-                result = item.process(prev_data)
+                result = item.process(prev_process)
                 if result is False:
                     return False
                 
-                prev_data[item.name] = result
+                for k, v in result.items():
+                    prev_process[k] = v
 
-        return prev_data
+        return prev_process
 
