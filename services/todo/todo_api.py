@@ -46,10 +46,10 @@ def addTask(prev_process, listID: str):
 def updateTask(prev_process, listID: str):
     listID = _hash(listID)
 
-    if prev_process["pipe_auth"]["authorized"] is False:
+    if prev_process["authorized"] is False:
         uname = "!anonymous!"
     else:
-        uname = prev_process["pipe_auth"]["username"]
+        uname = prev_process["username"]
 
     data = flask.request.json
     id = data["id"]
