@@ -88,7 +88,7 @@ class APIGateway:
         api = service.apis["routes"][api_id]
 
         # pipe
-        res = self.pipe.process(f"/{service.prefix}/{path}", flask.request.method, api.get("pipe_check", {}))
+        res = self.pipe.process(f"/{service.prefix}/{path}", flask.request.method, api)
         if res is False:
             flask.abort(403)
         prev_process = res

@@ -8,12 +8,18 @@
         {
             "path": "/loginStatus",
             "methods": ["GET"],
-            "handler": "loginStatus"
+            "handler": "loginStatus",
+            "pipe": {
+                "use": ["pipe_auth"]
+            }
         },
         {
             "path": "/hello/<name>/<int:age>",
             "methods": ["GET"],
-            "handler": "hello"
+            "handler": "hello",
+            "pipe": {
+                "use": ["pipe_auth"]
+            }
         }
     ]
 }

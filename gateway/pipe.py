@@ -9,6 +9,7 @@ class PipeItem:
 
         self.name = config["name"]
         self.rules = config["rules"]
+        self.force = config["force"]
 
         # processor
         processor = config["processor"]
@@ -44,19 +45,26 @@ class Pipe:
     def __init__(self, config: dict):
         self.config = config
 
-        self.items = []
+        self.pipes = []
         for i in config["pipes"]:
-            self.items.append(PipeItem(i))
+            self.pipes.append(PipeItem(i))
 
-    def process(self, fullPath: str, /, method: str, pipe_check: dict):
+    def process(self, fullPath: str, /, method: str, api: dict):
         """
         Process a incoming request, and return the response
         """
+        pipe_use = api.get("pipe", {}).get("use", [])
+        pipe_check = api.get("pipe", {}).get("check", {})
+
         prev_process = {}
 
-        for item in self.items:
-            if item.match(fullPath, method):
-                result = item.process(prev_process)
+        for p in self.pipes:
+            if p.force is False and p.name not in pipe_use:
+                # skip this pipe
+                continue
+
+            if p.match(fullPath, method):
+                result = p.process(prev_process)
                 if result is False:
                     return False
 

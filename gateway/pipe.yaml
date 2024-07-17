@@ -1,5 +1,6 @@
 pipes:
   - name: pipe_auth
+    force: false
     rules:
       - path: ".*"
         methods: "*"

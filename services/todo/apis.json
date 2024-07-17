@@ -13,7 +13,10 @@
         {
             "path": "/<listID>/updateTask",
             "methods": ["POST"],
-            "handler": "updateTask"
+            "handler": "updateTask",
+            "pipe": {
+                "use": ["pipe_auth"]
+            }
         },
         {
             "path": "/<listID>/getTasks",

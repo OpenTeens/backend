@@ -4,16 +4,22 @@
             "path": "/register",
             "methods": ["POST"],
             "handler": "register",
-            "pipe_check": {
-                "authorized": [["==", false]]
+            "pipe": {
+                "use": ["pipe_auth"],
+                "check": {
+                    "authorized": [["==", false]]
+                }
             }
         },
         {
             "path": "/login",
             "methods": ["POST"],
             "handler": "login_pwd",
-            "pipe_check": {
-                "authorized": [["==", false]]
+            "pipe": {
+                "use": ["pipe_auth"],
+                "check": {
+                    "authorized": [["==", false]]
+                }
             }
         },
         {
@@ -25,8 +31,11 @@
             "path": "/logout",
             "methods": ["GET"],
             "handler": "logout",
-            "pipe_check": {
-                "authorized": [["==", true]]
+            "pipe": {
+                "use": ["pipe_auth"],
+                "pipe_check": {
+                    "authorized": [["==", true]]
+                }
             }
         }
     ]
