@@ -36,7 +36,7 @@ def addTask(tbname, title, content, ddl, manager, reviewer):
         reviewer=reviewer,
     )
 
-    return findTask(tbname, title, content, ddl, manager, reviewer).id
+    return findTask(tbname, title, content, ddl, manager, reviewer)['id']
 
 
 def findTask(tbname, title, content, ddl, manager, reviewer):
