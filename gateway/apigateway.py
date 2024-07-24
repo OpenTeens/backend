@@ -7,6 +7,7 @@ from .service import Service
 from .pipe import Pipe
 from flask_cors import CORS
 
+
 class APIGateway:
     def __init__(self, host="0.0.0.0", port=5000, **kwargs):
         self._get_all_services()
@@ -15,7 +16,7 @@ class APIGateway:
         self.app = flask.Flask("API Gateway")
 
         CORS(self.app, origins=["https://openteens.org", "https://todo.openteens.org"])
-        
+
         self.host = host
         self.port = port
         self.kwargs = kwargs
@@ -59,6 +60,7 @@ class APIGateway:
         gateway.create_gateway_routes()
         ```
         """
+
         def make_gateway(s):
             def gateway(path):
                 return self.process(s, path)
@@ -109,12 +111,5 @@ class APIGateway:
 
 
 if __name__ == "__main__":
-    apigate = APIGateway(
-        "0.0.0.0",
-        5000,
-        ssl_context=(
-            "/home/bernie/cert/certificate.crt",
-            "/home/bernie/cert/private.key",
-        ),
-    )
+    apigate = APIGateway("0.0.0.0", 5000, debug=True)
     apigate.run()

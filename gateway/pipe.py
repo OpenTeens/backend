@@ -22,7 +22,6 @@ class PipeItem:
         """
         for r in self.rules:
             if r["methods"] == "*" or method in r["methods"]:
-                print(r["path"], path)
                 if re.match(r["path"], path):
                     return True
 
