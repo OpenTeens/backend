@@ -30,18 +30,17 @@ def create_token(username: str, expire: int = 60):
     valid for 60 days in default
     """
     token = _gentoken(username)
-    validDate = (datetime.datetime.now() + datetime.timedelta(days=expire)).strftime(
-        "%Y-%m-%d %H:%M:%S"
-    )
+    expTime = datetime.datetime.now() + datetime.timedelta(days=expire)
+    validDate = expTime.strftime("%Y-%m-%d %H:%M:%S")
 
     # already exists
     if list(tb["token"] == token):
-        return None
+        return None, "token already exists"
 
     # one account can only have 5 tokens
     if len(list(tb["username"] == username)) < 5:
         tb.insert(username=username, token=token, validDate=validDate)
-        return token
+        return token, expTime
     else:
         # delete expired tokens
         for data in tb["username"] == username:
@@ -52,9 +51,9 @@ def create_token(username: str, expire: int = 60):
         # add token
         if len(list(tb["username"] == username)) < 5:
             tb.insert(username=username, token=token, validDate=validDate)
-            return token
+            return token, expTime
 
-    return None
+    return None, "too many tokens"
 
 
 def check_token(token: str):
@@ -75,6 +74,7 @@ def del_token(token: str):
         (tb["token"] == token).delete()
         return True
     return False
+
 
 def get_username(token: str):
     return list(tb["token"] == token)[0]["username"]

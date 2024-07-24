@@ -1,3 +1,5 @@
+import datetime
+
 from . import login_db
 from . import token_db
 
@@ -44,16 +46,18 @@ def login(username: str, password: str):
             "msg": "Invalid username or password"
         }
 
-    token = token_db.create_token(username)
+    token, expire = token_db.create_token(username)
     if token is None:
         return {
             "code": 3,
-            "msg": "Too many tokens"
+            "msg": expire
         }
 
     return {
         "code": 0,
         "token": token
+    }, 200, {
+        "Set-Cookie": f"ot_auth_token={token}; expires={expire.astimezone(datetime.timezone.utc).strftime('%a, %d %b %Y %H:%M:%S GMT')}; Path=/; SameSite=Strict; Secure"
     }
 
 def tlogin(token: str):
