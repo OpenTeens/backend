@@ -9,7 +9,7 @@ def login_pwd(data):
     return login_check.login(username, pwd)
 
 def login_token(data):
-    token = request.cookies.get("ot_login_token", None)
+    token = request.cookies.get("ot_auth_token", None)
     if token is None:
         return {
             "code": 1,
@@ -30,7 +30,7 @@ def logout(data):
     return login_check.logout(token)
 
 def pipe_auth(prev_data: dict):
-    token = request.cookies.get("ot_login_token", None)
+    token = request.cookies.get("ot_auth_token", None)
     if token is not None:
         tlogin = login_check.tlogin(token)
         if tlogin["code"] == 0:
