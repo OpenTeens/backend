@@ -38,7 +38,7 @@ def create_token(username: str, expire: int = 60):
         return None, "token already exists"
 
     # one account can only have 5 tokens
-    if len(list(tb["username"] == username)) < 5:
+    if len(list(tb["username"] == username)) < 5000:    # TODO: for dev use only
         tb.insert(username=username, token=token, validDate=validDate)
         return token, expTime
     else:
@@ -49,7 +49,7 @@ def create_token(username: str, expire: int = 60):
                 del data
 
         # add token
-        if len(list(tb["username"] == username)) < 5:
+        if len(list(tb["username"] == username)) < 5000:    # TODO: for dev use only
             tb.insert(username=username, token=token, validDate=validDate)
             return token, expTime
 
