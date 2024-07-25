@@ -24,7 +24,7 @@ def register(username: str, password: str):
     if check:
         return {
             "code": 0,
-            "token": token_db.create_token(username)    # there won't be 5 token when registering
+            "token": token_db.create_token(username)[0]    # there won't be 5 token when registering
         }
     else:
         return {
