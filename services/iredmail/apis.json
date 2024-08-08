@@ -1,0 +1,9 @@
+{
+    "routes": [
+        {
+            "path": "/activate",
+            "methods": ["POST"],
+            "handler": "activate"
+        }
+    ]
+}

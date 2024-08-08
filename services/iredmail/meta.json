@@ -1,0 +1,11 @@
+{
+    "name": "iredmail",
+    "description": "iredmail mail service",
+    "version": "1.0.0",
+    "disabled": false,
+    "port": -1,
+    "prefix": "email",
+    "process": {
+        "type": "pymodule"
+    }
+}
